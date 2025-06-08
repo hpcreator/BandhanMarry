@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Bandhan Marry</string>
+    <string name="app_logo">App Logo</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="signup">Sign Up</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="have_account">Have an account?</string>
+    <string name="dont_have_account">Haven\'t any account?</string>
+
+
+    <!-- Login Screen -->
+    <string name="login_to_account">Login to your account</string>
+    <string name="login_description">Please input your username and password and login to your account to get access to your dashboard.</string>
+
+    <!-- Register Screen -->
+    <string name="create_account">Create an account</string>
+    <string name="register_description">Please provide your valid information\'s to register!</string>
+    <string name="dob">Date Of Birth (DD-MM-YYYY)</string>
+    <string name="first_name">First Name</string>
+    <string name="middle_name">Middle Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">E-Mail Address</string>
+    <string name="country">Country</string>
+    <string name="phone_code">Phone Code</string>
+    <string name="privacy_policy_agree">I agree with</string>
+    <string name="privacy_policy_terms">Privacy Policy, Terms and Conditions</string>
+    <string name="receive_email">Receive email from Bandhanmarry.com</string>
+    <string name="receive_sms">Receive SMS from Bandhanmarry.com</string>
+</resources>
