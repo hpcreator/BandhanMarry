@@ -1,12 +1,14 @@
 package com.hpcreation.bandhanmarry.presentation.ui.components
 
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
@@ -17,12 +19,11 @@ fun HeadlineText(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    style: TextStyle = LocalTextStyle.current
 ) {
     Text(
-        text = text, style = MaterialTheme.typography.headlineMedium.copy(
-            color = color
-        ), textAlign = textAlign, modifier = modifier
+        text = text, style = style, textAlign = textAlign, modifier = modifier, color = color
     )
 }
 

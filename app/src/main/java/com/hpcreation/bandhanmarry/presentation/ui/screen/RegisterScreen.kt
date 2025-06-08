@@ -88,7 +88,7 @@ fun RegisterScreen(navController: NavController) {
             )
 
             Text(
-                text = "Please provide your valid informations to register!",
+                text = "Please provide your valid information to register!",
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier

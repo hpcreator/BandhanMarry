@@ -21,13 +21,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,14 +43,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hpcreation.bandhanmarry.R
 import com.hpcreation.bandhanmarry.presentation.navigation.Routes
 import com.hpcreation.bandhanmarry.presentation.ui.components.DescriptionText
 import com.hpcreation.bandhanmarry.presentation.ui.components.HeadlineText
+import com.hpcreation.bandhanmarry.presentation.ui.components.OutlineButton
 import com.hpcreation.bandhanmarry.presentation.ui.components.OutlinePasswordTextbox
 import com.hpcreation.bandhanmarry.presentation.ui.components.OutlinedTextBox
 import com.hpcreation.bandhanmarry.presentation.ui.components.RoundedButton
@@ -56,14 +63,20 @@ import com.hpcreation.bandhanmarry.presentation.ui.theme.BluePrimary
 import com.hpcreation.bandhanmarry.presentation.ui.theme.OrangeSecondary
 import com.hpcreation.bandhanmarry.presentation.ui.theme.PaleBlue
 import com.hpcreation.bandhanmarry.presentation.ui.theme.SoftPink
+import com.hpcreation.bandhanmarry.presentation.viewmodel.LoginViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    var username by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var rememberMe by rememberSaveable { mutableStateOf(false) }
+fun LoginScreen(navController: NavController, viewModel: LoginViewModel = koinViewModel()) {
 
     val context = LocalContext.current
+    val username by viewModel.username.collectAsState()
+    val password by viewModel.password.collectAsState()
+    val usernameError by viewModel.usernameError.collectAsState()
+    val passwordError by viewModel.passwordError.collectAsState()
+
+    var rememberMe by rememberSaveable { mutableStateOf(false) }
+    var showForgotPasswordDialog by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -72,7 +85,7 @@ fun LoginScreen(navController: NavController) {
                 brush = Brush.linearGradient(
                     colors = listOf(SoftPink, SoftPink, PaleBlue, PaleBlue)
                 )
-            ), contentAlignment = Alignment.Center // Center whole content vertically & horizontally
+            ), contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
@@ -108,7 +121,10 @@ fun LoginScreen(navController: NavController) {
                         .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    HeadlineText(text = stringResource(R.string.login_to_account))
+                    HeadlineText(
+                        text = stringResource(R.string.login_to_account),
+                        style = MaterialTheme.typography.displayLarge
+                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -117,13 +133,13 @@ fun LoginScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(20.dp))
                     OutlinedTextBox(
                         value = username,
-                        onValueChange = {
-                            username = it
-                        },
+                        onValueChange = viewModel::onUsernameChanged,
                         label = stringResource(R.string.username),
                         maxLines = 1,
                         singleLine = true,
                         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+                        isError = usernameError != null,
+                        helperText = usernameError
                     )
 
 
@@ -131,12 +147,12 @@ fun LoginScreen(navController: NavController) {
 
                     OutlinePasswordTextbox(
                         value = password,
-                        onValueChange = {
-                            password = it
-                        },
+                        onValueChange = viewModel::onPasswordChanged,
                         label = stringResource(R.string.password),
                         singleLine = true,
-                        maxLines = 1
+                        maxLines = 1,
+                        isError = passwordError != null,
+                        helperText = passwordError,
                     )
                     Spacer(modifier = Modifier.height(20.dp))
 
@@ -156,15 +172,44 @@ fun LoginScreen(navController: NavController) {
                         SmallClickableText(
                             text = stringResource(R.string.forgot_password), underline = true
                         ) {
-                            Toast.makeText(context, "Forgot it", Toast.LENGTH_SHORT).show()
+                            showForgotPasswordDialog = true
                         }
+                    }
+                    if (showForgotPasswordDialog) {
+                        AlertDialog(
+                            icon = {
+                            Image(
+                                painter = painterResource(R.drawable.app_logo),
+                                contentDescription = stringResource(R.string.app_logo),
+                                modifier = Modifier.size(48.dp)
+                            )
+                        },
+                            onDismissRequest = { showForgotPasswordDialog = false },
+                            title = { TitleText(text = "Forgot Password!", fontSize = 20.sp) },
+                            text = {
+                                DescriptionText(
+                                    text = "Please contact our team to reset your password.",
+                                    textAlign = TextAlign.Start
+                                )
+                            },
+                            confirmButton = {
+                                OutlineButton(text = "OK") {
+                                    showForgotPasswordDialog = false
+                                }
+                            })
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
 
                     RoundedButton(text = stringResource(R.string.login), onClick = {
-                        navController.navigate(Routes.Home.route) {
-                            popUpTo(Routes.Login.route) { inclusive = true }
+                        viewModel.login()
+                        if (viewModel.loginError.value != null) {
+                            Toast.makeText(context, viewModel.loginError.value, Toast.LENGTH_SHORT)
+                                .show()
+                        } else {
+                            navController.navigate(Routes.Home.route) {
+                                popUpTo(Routes.Login.route) { inclusive = true }
+                            }
                         }
                     })
                 }

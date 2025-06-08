@@ -60,7 +60,7 @@ fun OutlinedTextBox(
         isError = isError,
         supportingText = { if (isError) Text(text = helperText.toString()) },
         shape = RoundedCornerShape(cornerRadius),
-        placeholder = { if (placeholder != null) Text(text = placeholder.toString()) })
+        placeholder = { if (placeholder != null) Text(text = placeholder) })
 }
 
 
@@ -109,5 +109,5 @@ fun OutlinePasswordTextbox(
         isError = isError,
         supportingText = { if (isError) Text(text = helperText.toString()) },
         shape = RoundedCornerShape(cornerRadius),
-        placeholder = { if (placeholder != null) Text(text = placeholder.toString()) })
+        placeholder = { if (placeholder != null) Text(text = placeholder) })
 }

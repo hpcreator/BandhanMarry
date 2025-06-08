@@ -46,10 +46,10 @@ fun OutlineButton(
     modifier: Modifier = Modifier,
     text: String,
     textSize: TextUnit = 18.sp,
-    onClick: () -> Unit,
     borderColor: Color = MaterialTheme.colorScheme.primary,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
-    cornerRadius: Dp = 10.dp
+    cornerRadius: Dp = 10.dp,
+    onClick: () -> Unit,
 ) {
     OutlinedButton(
         modifier = modifier
