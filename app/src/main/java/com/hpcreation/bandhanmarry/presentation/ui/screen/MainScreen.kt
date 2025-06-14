@@ -35,7 +35,7 @@ import kotlinx.coroutines.delay
 fun MainScreen(navController: NavController) {
     LaunchedEffect(true) {
         delay(2000)
-        val userLoggedIn = false // simulate logic or read from persistent storage
+        val userLoggedIn = true // simulate logic or read from persistent storage
         navController.navigate(if (userLoggedIn) Routes.Home.route else Routes.Login.route) {
             popUpTo(Routes.Main.route) { inclusive = true }
         }
