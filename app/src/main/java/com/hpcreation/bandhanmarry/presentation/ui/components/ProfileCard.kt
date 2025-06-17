@@ -1,47 +1,68 @@
 package com.hpcreation.bandhanmarry.presentation.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.hpcreation.bandhanmarry.domain.model.UserProfile
 
 @Composable
 fun ProfileCard(
-    profile: UserProfile, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null
+    profile: UserProfile,
+    modifier: Modifier = Modifier,
+    onViewProfile: () -> Unit = {},
+    onInterest: () -> Unit = {},
+    onIgnore: () -> Unit = {},
+    onShortlist: () -> Unit = {},
+    onReport: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     Card(
         modifier = modifier
-            .padding(vertical = 8.dp, horizontal = 4.dp)
-            .fillMaxWidth()
-            .clickable(enabled = onClick != null) { onClick?.invoke() },
-        elevation = CardDefaults.cardElevation(4.dp),
-        shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.scrim)
+            .padding(vertical = 8.dp, horizontal = 8.dp)
+            .fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(8.dp),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, Color(0xFFBDBDBD))
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             // Image top half
@@ -50,14 +71,48 @@ fun ProfileCard(
                     .fillMaxWidth()
                     .height(300.dp)
             ) {
-                Image(
+                /*Image(
                     painter = rememberAsyncImagePainter(profile.imageUrl),
                     contentDescription = "Profile Image",
                     modifier = Modifier
                         .fillMaxSize()
                         .background(Color.Red.copy(alpha = 0.3f)),
                     contentScale = ContentScale.Crop
+                )*/
+                AsyncImage(
+                    model = ImageRequest.Builder(context).data(profile.imageUrl)
+                        .diskCachePolicy(CachePolicy.ENABLED) // Ensures disk cache is used
+                        .memoryCachePolicy(CachePolicy.ENABLED).build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(
+                            RoundedCornerShape(
+                                topStart = 12.dp,
+                                topEnd = 12.dp,
+                                bottomEnd = 8.dp,
+                                bottomStart = 8.dp
+                            )
+                        )
                 )
+                IconButton(
+                    onClick = { onShortlist() },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(18.dp)
+                        .size(36.dp)
+                        .background(
+                            color = Color.White.copy(alpha = 0.5f), shape = CircleShape
+                        )
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Star,
+                        contentDescription = "Shortlist",
+                        tint = Color(0xFFFFA000)
+                    )
+                }
+
 
                 // Name + Member ID overlay
                 Column(
@@ -108,8 +163,55 @@ fun ProfileCard(
                 Spacer(modifier = Modifier.height(5.dp))
                 ProfileInfoRow(label = "Visa Status", value = profile.visaStatus)
                 Spacer(modifier = Modifier.height(5.dp))
+
+
+                Button(
+                    onClick = onViewProfile,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        "View Full Profile",
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+                    )
+                }
+
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = Color(MaterialTheme.colorScheme.secondary.toArgb())
+                )
+
+                // Action Row
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    ActionIconLabel(Icons.Filled.Favorite, "Interest", onInterest, Color.Red)
+                    ActionIconLabel(Icons.Filled.Person, "Ignore", onIgnore, Color.Red)
+                    ActionIconLabel(Icons.Filled.Info, "Report", onReport, Color.Gray)
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun ActionIconLabel(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    onClick: () -> Unit,
+    tint: Color
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .sizeIn(minWidth = 56.dp)
+    ) {
+        IconButton(onClick = onClick) {
+            Icon(icon, contentDescription = label, tint = tint)
+        }
+        Text(label, fontSize = 12.sp)
     }
 }
 
@@ -120,12 +222,10 @@ fun ProfileInfoRow(label: String, value: String) {
             text = "$label : ", fontWeight = FontWeight.SemiBold, fontSize = 16.sp
         )
         Spacer(
-            modifier = Modifier
-                .width(5.dp)
+            modifier = Modifier.width(5.dp)
         )
         DescriptionText(
-            text = value,
-            color = MaterialTheme.colorScheme.primary
+            text = value, color = MaterialTheme.colorScheme.primary
         )
     }
 }

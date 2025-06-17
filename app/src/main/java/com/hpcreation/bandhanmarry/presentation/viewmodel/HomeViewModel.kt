@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class HomeViewModel : ViewModel() {
+open class HomeViewModel : ViewModel() {
     private val _profiles = MutableStateFlow<List<UserProfile>>(emptyList())
-    val profiles: StateFlow<List<UserProfile>> = _profiles.asStateFlow()
+    open val profiles: StateFlow<List<UserProfile>> = _profiles.asStateFlow()
 
     init {
         // TODO: Replace with your repository/network/database call
