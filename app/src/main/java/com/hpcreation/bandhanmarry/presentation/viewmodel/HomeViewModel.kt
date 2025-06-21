@@ -42,11 +42,11 @@ open class HomeViewModel : ViewModel() {
                 occupation = "Software Professional",
                 location = "Ahmedabad, GUJARAT, India",
                 visaStatus = "No Specified",
-                imageUrl = "https://lh3.googleusercontent.com/a/ACg8ocJ9l-pYf5P7S7ZqlekgI6HOt1gnKsXQOyatATJx9oc1vmezEQN0=s720-c-no"
+                imageUrl = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1200&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8fDA%3D"
             ), UserProfile(
                 id = "1",
                 memberId = "BM99092",
-                name = "Khushi Joshi",
+                name = "Raj Shah",
                 age = 24,
                 birthYear = 2001,
                 cast = "Brahmin - Audichya",
@@ -55,9 +55,9 @@ open class HomeViewModel : ViewModel() {
                 weight = "40.00kg",
                 education = "BE - IT",
                 occupation = "Software Professional",
-                location = "Ahmedabad, GUJARAT, India",
+                location = "Baroda, GUJARAT, India",
                 visaStatus = "No Specified",
-                imageUrl = "https://lh3.googleusercontent.com/a/ACg8ocJ9l-pYf5P7S7ZqlekgI6HOt1gnKsXQOyatATJx9oc1vmezEQN0=s720-c-no"
+                imageUrl = "https://images.unsplash.com/photo-1678286742832-26543bb49959?q=80&w=1288&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             )
         )
     }

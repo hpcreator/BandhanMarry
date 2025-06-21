@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.hpcreation.bandhanmarry.R
 import com.hpcreation.bandhanmarry.domain.model.UserProfile
+import com.hpcreation.bandhanmarry.presentation.navigation.Routes
 import com.hpcreation.bandhanmarry.presentation.ui.components.HeadlineText
 import com.hpcreation.bandhanmarry.presentation.ui.components.ProfileCard
 import com.hpcreation.bandhanmarry.presentation.ui.theme.PaleBlue
@@ -33,7 +34,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = koinViewModel()) {
     val profiles by viewModel.profiles.collectAsState()
-    HomeScreenContent(profiles = profiles)
+    HomeScreenContent(
+        profiles = profiles, onViewProfile = { navController.navigate(Routes.Home.route) })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,7 +65,7 @@ fun HomeScreenContent(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
             )
@@ -71,15 +73,19 @@ fun HomeScreenContent(
         Box(
             modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter
         ) {
-            LazyColumn(contentPadding = innerPadding) {
+            LazyColumn(
+                contentPadding = innerPadding, modifier = Modifier.fillMaxSize()
+            ) {
                 items(profiles) { profile ->
                     ProfileCard(
                         profile,
-                        onViewProfile = onViewProfile,
-                        onInterest = onInterest,
-                        onIgnore = onIgnore,
-                        onShortlist = onShortlist,
-                        onReport = onReport
+                        onViewProfile = {
+                            onViewProfile
+                        },
+                        onInterestClicked = onInterest,
+                        onIgnoreClicked = onIgnore,
+                        onShortlistClicked = onShortlist,
+                        onReportClicked = onReport
                     )
                 }
             }
